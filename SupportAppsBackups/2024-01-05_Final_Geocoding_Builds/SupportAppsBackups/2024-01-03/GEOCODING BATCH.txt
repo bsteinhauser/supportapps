@@ -1,0 +1,9 @@
+GEOCODING BATCH
+
+API CALLS WORKS!
+
+GETTING ERROR MAKING API CALL ON SUCCESS
+
+ALSO GETTING                 "Description": "Invalid state\/country abbreviation; Input address does not contain a house or building number; Input street name differs somewhat from match; Location along street is uncertain; Input street type differs from match"
+
+MAY HAVE TO IGNORE A LOT OF THESE ??

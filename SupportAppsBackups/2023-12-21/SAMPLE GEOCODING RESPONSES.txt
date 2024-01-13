@@ -1,0 +1,119 @@
+SAMPLE GEOCODING RESPONSES
+
+200 SUCCESS
+[
+    {
+        "Address": {
+            "StreetAddress": "15 St Cross Street",
+            "City": "London",
+            "State": "UK",
+            "Zip": "EC1N 8UW",
+            "County": "London",
+            "Country": "United Kingdom",
+            "SPLC": null,
+            "CountryPostalFilter": 0,
+            "AbbreviationFormat": 0,
+            "StateName": "England",
+            "StateAbbreviation": "ENG",
+            "CountryAbbreviation": "UK"
+        },
+        "Coords": {
+            "Lat": "51.520823",
+            "Lon": "-0.107749"
+        },
+        "Region": 3,
+        "Label": "",
+        "PlaceName": "",
+        "TimeZone": "+0:00",
+        "Errors": [],
+        "SpeedLimitInfo": null,
+        "ConfidenceLevel": "Exact",
+        "DistanceFromRoad": null,
+        "CrossStreet": null,
+        "TimeZoneOffset": "GMT+0:00"
+    }
+]
+
+
+400 
+INPUT: STREET="PITT ST", COUNTRY="AS"
+[
+    {
+        "Type": 1,
+        "Code": 25,
+        "LegacyErrorCode": 400,
+        "Description": "GeocodeLocation.Address object at index 0 requires (City with optional State) or Zip or Place Name or SPLC"
+    }
+]
+
+
+200 BUT NO MATCHES FOUND
+INPUT: CITY="CROSS ST", COUNTRY="BR"
+Even though there is a 200 response, we display the error because there is no address or coords.
+[
+    {
+        "Address": null,
+        "Coords": null,
+        "Region": 4,
+        "Label": null,
+        "PlaceName": null,
+        "TimeZone": null,
+        "Errors": [
+            {
+                "Type": 1,
+                "Code": 88,
+                "LegacyErrorCode": 400,
+                "Description": "No matching city found"
+            }
+        ],
+        "SpeedLimitInfo": null,
+        "ConfidenceLevel": null,
+        "DistanceFromRoad": null,
+        "CrossStreet": null
+    }
+]
+
+200 BUT NO ADDRESS NUMBER
+INPUT: STREET="CROSS ST", CITY="LONDON", COUNTRY="UK"
+Even though there is an error, we don't show it because we have an address and coords. So we continue with flying to the pin.
+[
+    {
+        "Address": {
+            "StreetAddress": "1-35 Cross Street",
+            "City": "London",
+            "State": "UK",
+            "Zip": "N1 2BJ",
+            "County": "London",
+            "Country": "United Kingdom",
+            "SPLC": null,
+            "CountryPostalFilter": 0,
+            "AbbreviationFormat": 0,
+            "StateName": "England",
+            "StateAbbreviation": "ENG",
+            "CountryAbbreviation": "UK"
+        },
+        "Coords": {
+            "Lat": "51.538933",
+            "Lon": "-0.100104"
+        },
+        "Region": 3,
+        "Label": "",
+        "PlaceName": "",
+        "TimeZone": "+0:00",
+        "Errors": [
+            {
+                "Type": 0,
+                "Code": 89,
+                "LegacyErrorCode": 1000,
+                "Description": "Input address does not contain a house or building number; Multiple best matches; Location along street is uncertain"
+            }
+        ],
+        "SpeedLimitInfo": null,
+        "ConfidenceLevel": "Uncertain",
+        "DistanceFromRoad": null,
+        "CrossStreet": null,
+        "TimeZoneOffset": "GMT+0:00"
+    }
+]
+
+

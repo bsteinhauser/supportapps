@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://maps-sdk.trimblemaps.com/v3/trimblemaps-3.12.0.css" />
+    <script src="https://maps-sdk.trimblemaps.com/v3/trimblemaps-3.12.0.js"></script>
+    <script src="https://maps-sdk.trimblemaps.com/addon/trimblemaps-mapmenus-1.0.7.js"></script>
+    <link href="https://maps-sdk.trimblemaps.com/addon/trimblemaps-mapmenus-1.0.7.css" rel="stylesheet">
+    <style>
+
+      h4 {
+            margin-bottom: 5px; /* Adjust the value as needed */
+      }
+
+      input#fileInput {
+          margin-bottom: 10px; /* Adjust the value as needed */
+      }
+
+      #fileInput {
+        width: 100%;
+      }
+
+
+
+      body { 
+        margin: 50px;
+        padding: 0;
+      }
+
+      #map {
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          width: 100%;
+      }
+
+      
+
+      /* Add this to your CSS styles or in a style tag in the head of your HTML */
+      .address-table th {
+        position: sticky;
+        top: 0;
+        background-color: #f1f1f1; /* Add a background color for the sticky header */
+      }
+    </style>
+    
+    <title>Reverse Geocode (Batch)</title>
+  </head>
+  
+  <body>
+      <h1>Reverse Geocode (Batch)</h1>
+      <a href="https://developer.trimblemaps.com/restful-apis/location/geocoding-api/reverse-geocoding-batch/" target="_blank">API Documentation</a>
+      <p>
+        Batch reverse geocoding allows you to reverse geocode a batch of geographic coordinates into street addresses through a POST request.</br>
+        Use the button below to upload a csv file of coordinates. The tool will return the list of addresses for each set of coordinates.</br>
+        Required headers: Latitude, Longitude.</br>
+      </p>
+
+      <h4>Select CSV file</h4>
+
+      <!-- Add the file input, error div and status div -->
+      <input type="file" id="fileInput" accept=".csv" onchange="handleFile()">
+      <div id="errorDiv" style="color: red;"></div>
+      <div id="statusDiv"></div>
+
+
+      <!-- Create map container -->
+      <div id="mapContainer" container id style="width: 100%; height: 600px;"></div>
+
+
+      <!-- Script for reverse geocoding -->
+      <script src="reverseGeocodeBatch.js"></script>
+
+  </body>
+</html>

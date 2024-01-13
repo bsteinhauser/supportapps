@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://maps-sdk.trimblemaps.com/v3/trimblemaps-3.12.0.css" />
+    <script src="https://maps-sdk.trimblemaps.com/v3/trimblemaps-3.12.0.js"></script>
+    <script src="https://maps-sdk.trimblemaps.com/addon/trimblemaps-mapmenus-1.0.7.js"></script>
+    <link href="https://maps-sdk.trimblemaps.com/addon/trimblemaps-mapmenus-1.0.7.css" rel="stylesheet">
+    <style>
+
+      h4 {
+            margin-bottom: 5px; /* Adjust the value as needed */
+      }
+
+      input#fileInput {
+          margin-bottom: 10px; /* Adjust the value as needed */
+      }
+
+      #fileInput {
+        width: 100%;
+      }
+
+
+
+      body { 
+        margin: 50px;
+        padding: 0;
+      }
+
+      #map {
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          width: 100%;
+      }
+
+      
+
+      /* Add this to your CSS styles or in a style tag in the head of your HTML */
+      .address-table th {
+        position: sticky;
+        top: 0;
+        background-color: #f1f1f1; /* Add a background color for the sticky header */
+      }
+    </style>
+    
+    <title>Geocode (Batch)</title>
+  </head>
+  
+  <body>
+      <h1>Geocode (Batch)</h1>
+      <h4>Select CSV file</h4>
+
+      <!-- Add the file input, error div and status div -->
+      <input type="file" id="fileInput" accept=".csv" onchange="handleFile()">
+      <div id="errorDiv" style="color: red;"></div>
+      <div id="statusDiv"></div>
+
+
+      <!-- Create map container -->
+      <div id="mapContainer" container id style="width: 100%; height: 600px;"></div>
+
+
+      <!-- Script for reverse geocoding -->
+      <script src="geocodeBatch.js"></script>
+
+  </body>
+</html>

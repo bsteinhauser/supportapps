@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://maps-sdk.trimblemaps.com/v3/trimblemaps-3.12.0.css" />
+    <script src="https://maps-sdk.trimblemaps.com/v3/trimblemaps-3.12.0.js"></script>
+    <script src="https://maps-sdk.trimblemaps.com/addon/trimblemaps-mapmenus-1.0.7.js"></script>
+    <link href="https://maps-sdk.trimblemaps.com/addon/trimblemaps-mapmenus-1.0.7.css" rel="stylesheet">
+    <style>
+      body { 
+        margin: 50px;
+        padding: 0;
+      }
+
+      #map {
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          width: 100%;
+      }
+
+      
+
+      /* Add this to your CSS styles or in a style tag in the head of your HTML */
+      .address-table th {
+        position: sticky;
+        top: 0;
+        background-color: #f1f1f1; /* Add a background color for the sticky header */
+      }
+    </style>
+    
+    <title>Support Apps</title>
+  </head>
+  
+  <body>
+      <h1>Support Apps</h1>       
+
+      <!-- GeocodeNA Button -->
+      <!-- <button id="geocodeNAButton">Geocode (North America)</button>
+        <script>
+          //Get Reverse Geocode Button by its ID
+          const geocodeNAButton = document.getElementById('geocodeNAButton');
+
+          // Add click event listener to the button
+          geocodeNAButton.addEventListener('click', function() {
+            // Redirect to other page
+            window.location.href = 'geocodingNA.html';
+          });
+        </script> -->
+
+        <!-- GeocodeEU Button -->
+      <button id="geocodeButton">Geocode</button>
+        <script>
+          //Get Reverse Geocode Button by its ID
+          const geocodeEUButton = document.getElementById('geocodeButton');
+
+          // Add click event listener to the button
+          geocodeEUButton.addEventListener('click', function() {
+            // Redirect to other page
+            window.location.href = 'geocode.html';
+          });
+        </script>
+
+      <button id="geocodeBatchButton">Geocode (Batch)</button>
+        <script>
+          // Get Geocode Batch button by its ID
+          const geocodeBatchButton = document.getElementById('geocodeBatchButton');
+          // Add click event listender to the button
+          geocodeBatchButton.addEventListener('click', function() {
+            // redirect to other page
+            window.location.href = 'geocodeBatch.html';
+          })
+        </script>
+
+      
+      <div>
+        <!-- Reverse Geocode Button -->
+        <button id="reverseGeocodeButton">Reverse Geocode</button>
+          <script>
+            //Get Reverse Geocode Button by its ID
+            const reverseGeocodeButton = document.getElementById('reverseGeocodeButton');
+
+            // Add click event listener to the button
+            reverseGeocodeButton.addEventListener('click', function() {
+              // Redirect to other page
+              window.location.href = 'reverseGeocode.html';
+            });
+          </script>
+          
+        <!-- Reverse Geocde Batch Button -->
+        <button id="reverseGeocodeBatchButton">Reverse Geocode (Batch)</button>
+          <script>
+            // Get Reverse Geocode Batch Button by its ID
+            const reverseGeocodeBatchButton = document.getElementById('reverseGeocodeBatchButton');
+            
+            //Add click event listener to the button
+            reverseGeocodeBatchButton.addEventListener('click', function () {
+              // Redirect to the other page
+              window.location.href = 'reverseGeocodeBatch.html';
+            });
+          </script>
+
+        
+      </div>
+  </body>
+</html>

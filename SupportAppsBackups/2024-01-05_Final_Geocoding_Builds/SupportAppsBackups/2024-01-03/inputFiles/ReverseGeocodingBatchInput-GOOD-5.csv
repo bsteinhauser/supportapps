@@ -1,0 +1,6 @@
+StreetAddress,City,State,Zip,County,Country,SPLC,CountryPostalFilter,AbbreviationFormat,StateName,StateAbbreviation,CountryAbbreviation,Lat,Long,Region,Label,PlaceName,TimeZone,ConfidenceLevel,TimeZoneOffset
+,,,,,,,,,,,,32.288858,-110.940531,4,,,MST,Exact,GMT-7:00
+,,,,,,,,,,,,33.880564,-117.434047,4,,,PDT,Good,GMT-7:00
+,,,,,,,,,,,,33.898068,-117.227990,4,,,PDT,Uncertain,GMT-7:00
+,,,,,,,,,,,,33.978032,-117.352516,4,,,PDT,Exact,GMT-7:00
+,,,,,,,,,,,,34.470937,-117.334317,4,,,PDT,Uncertain,GMT-7:00

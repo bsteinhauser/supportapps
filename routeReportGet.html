@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <link rel="stylesheet" href="https://maps-sdk.trimblemaps.com/v3/trimblemaps-3.12.0.css" />
+   <script src="https://maps-sdk.trimblemaps.com/v3/trimblemaps-3.12.0.js"></script>
+   <script src="https://maps-sdk.trimblemaps.com/addon/trimblemaps-mapmenus-1.0.7.js"></script>
+   <link href="https://maps-sdk.trimblemaps.com/addon/trimblemaps-mapmenus-1.0.7.css" rel="stylesheet">
+   <title>RouteReport GET</title>
+   
+   <style>
+      h3 {margin-bottom: 5px;}
+      p {margin-top: 5px;}
+
+      #apiKeyInput {width: 300px; margin-bottom: 20px;}
+      #reportTypeDiv {margin-bottom: 50px;}
+      #queryParamsDiv {margin-bottom: 50px; width: 600px;}   
+      #requestUrlInput {width: 500px;}   
+
+
+      /* Style for report type checkboxes */
+      .checklistContainer {
+         display: grid;
+         grid-template-columns: repeat(4, 1fr);
+         gap: 5px;
+         width: 500px;
+         border: 1px solid black;
+         background-color: rgba(136, 136, 136, 0.205);
+      }
+      
+      label {
+         display:block;
+         margin-bottom: 5px;
+      }
+
+      table {
+         border-collapse: collapse;
+         width: 100%;
+         
+      }
+
+      /* Remove right border columns 1 and 2 */
+      th:nth-child(1),
+      td:nth-child(1),
+      th:nth-child(2),
+      td:nth-child(2) {
+         border-right: none;
+      }
+
+      /* Remove left border for columns 2 and 3 */
+      th:nth-child(2),
+      td:nth-child(2),
+      th:nth-child(3),
+      td:nth-child(3) {
+         border-left: none;
+      }
+
+      th, td {
+         border: 1px solid black;
+         padding: 5px;
+         text-align: center;
+      }
+
+      select {
+         width: 100%;
+         padding: 5px;
+      }
+
+      /* Adjust column widths */
+      th:nth-child(1),
+      td:nth-child(1) {
+         width: 20%; /* Adjust the width as needed */
+      }
+
+      th:nth-child(2),
+      td:nth-child(2) {
+         width: 5%; /* Adjust the width as needed */
+      }
+
+      th:nth-child(3),
+      td:nth-child(3) {
+         width: 75%; /* Adjust the width as needed */
+      }
+
+      /* Hide extra rows in queryParams table */
+      .hidden-row {
+      display: none;
+      }
+
+
+   </style>
+</head>
+<body>
+   <div id="header">
+      <h1>RouteReport GET</h1>
+      <a href = "https://developer.trimblemaps.com/restful-apis/routing/route-reports/get-route-reports/" target="_blank">API Documentation</a>
+      <p>
+         With our Route Reports API, you can create a route and retrieve a wide range of information about it. Everything from PC*MILER practical miles and turn-by-turn directions to trip costs and a detailed route path. Each route can be customized with a wide range of settings to fit your vehicles and business needs.</br>
+         For each route report request, a minimum of two stops (origin and destination) and one or more requested reports are required. The report response returns a list of reports in JSON format.
+      </p>
+   </div>
+   <hr> 
+
+   <div id="apiKeyInputDiv">
+      <h3>Enter Your API Key</h3>
+      <input type="text" id="apiKeyInput" name="apiKeyInput" placeholder="API Key">
+      <button id="setApiKey">SET</button>
+      <button id="clearApiKey">CLEAR</button>   
+   </div> 
+
+   <div id="reportTypeDiv">
+   <h3>Report Type</h3>
+   <p>Must choose at least one</p>
+      <div class="checklistContainer">
+         <label>
+            <input type="checkbox" name="Mileage"> Mileage
+         </label>
+         <label>
+            <input type="checkbox" name="Detail"> Detailed
+         </label>
+         <label>
+            <input type="checkbox" name="CalcMiles"> CalcMiles
+         </label>
+         <label>
+            <input type="checkbox" name="Directions"> Directions
+         </label>
+         <label>
+            <input type="checkbox" name="GeoTunnel"> GeoTunnel
+         </label>
+         <label>
+            <input type="checkbox" name="LeastCost"> LeastCost
+         </label>
+         <label>
+            <input type="checkbox" name="Road"> Road
+         </label>
+         <label>
+            <input type="checkbox" name="State"> State
+         </label>
+         <label>
+            <input type="checkbox" name="RoutePath"> RoutePath
+         </label>
+         <label>
+            <input type="checkbox" name="WeatherAlerts"> WeatherAlerts
+         </label>
+      </div>
+   </div>
+
+   <div id="queryParamsDiv">
+      <table id="queryParams" class="table table-sm notranslate">
+         <h3>Parameters</h3>
+         <p>Stops are required</p>
+         <tbody>
+            <!-- STOPS -->
+            <tr>
+               <td>Stops*</td>
+               <td>
+                  <input
+                     type="checkbox"
+                     checked=""
+                     disabled=""
+                     title="Required"
+                  />
+               </td>
+               <td>
+                  <input
+                     id="stops"
+                     value="-75.173297,39.942892;-74.83153,39.61703;-74.438942,39.362469"
+                     name="stops"
+                     type="text"
+                     required=""
+                     style="width: 95%;"
+                  />
+               </td>
+            </tr>
+
+            <!-- REGION -->
+            <tr>
+               <td>Region</td>
+               <td>
+                  <input
+                     type="checkbox"
+                  />
+               </td>
+               <td>
+                  <select 
+                     id="region"
+                     style="width: 97%;">
+                        <option value="4">North America (Default)</option>
+                        <option value="1">Africa</option>
+                        <option value="2">Asia</option>
+                        <option value="3">Europe</option>
+                        <option value="5">Oceania</option>
+                        <option value="6">South America</option>                  
+                        <option value="7">Middle East</option> 
+                        <option value="0">Unknown</option>
+                  </select>
+               </td>
+            </tr>
+            
+            <!-- ROUTING TYPE -->
+            <tr>
+               <td>Routing Type</td>
+               <td>
+                  <input type="checkbox" />
+               </td>
+               <td>
+                  <select 
+                     id="routeType"
+                     style="width: 97%;">
+                        <option value="0">Practical (Default)</option>
+                        <option value="1">Shortest</option>
+                        <option value="2">Fastest (Requires Traffic)</option>                  
+                  </select>
+               </td>
+            </tr>
+
+            <!-- TRAFFIC -->
+            <tr>
+               <td>Traffic</td>
+               <td>
+                  <input type="checkbox" />
+               </td>
+               <td>
+                  <select
+                     id="useTraffic"
+                     style="width: 97%;">
+                     <option value="false">False (Default)</option>
+                     <option value="true">True</option>               
+                  </select>
+               </td>
+            </tr>
+
+            <!-- ROUTING PROFILE -->
+            <tr>
+               <td>Routing Profile</td>
+               <td>
+                  <input type="checkbox" />
+               </td>
+               <td>
+                  <select
+                     id="profileName" 
+                     style="width: 97%;">
+                        <option value="Auto">Auto</option>
+                        <option value="Full-Size Van">Full-Size Van</option>
+                        <option value="Commercial Light">Commercial Light</option>
+                        <option value="Small School Bus">Small School Bus</option>
+                        <option value="Medium Duty Straight">Medium Duty Straight</option>
+                        <option value="Conventional School Bus">Conventional School Bus</option>
+                        <option value="RV">RV</option>                     
+                        <option value="Heavy Duty Straight">Heavy Duty Straight</option>
+                        <option value="Heavy Duty Doubles">Heavy Duty Doubles</option> 
+                        <option value="Heavy Duty Semitrailer">Heavy Duty Semitrailer</option>
+                        <option value="Default Rating">Default Rating (48',96",13'6",80,000)</option>
+                        <option value="Custom Profile">Custom Profile</option>
+                  </select>
+               </td>
+            </tr>
+
+            <!-- HEIGHT will override height in profileName -->
+            <tr>
+               <td>Height</td>
+               <td>
+                  <input
+                     type="checkbox"
+                  />
+               </td>
+               <td>
+                  <input
+                     id="vehHeight"
+                     value="13'6&quot;"
+                     name="height"
+                     type="text"
+                     style="width: 95%;"
+                  />
+               </td>
+            </tr>
+
+            <!-- WIDTH will override weight in profileName -->
+            <tr>
+               <td>Width</td>
+               <td>
+                  <input
+                     type="checkbox"
+                  />
+               </td>
+               <td>
+                  <input
+                     id="vehWidth"
+                     value="96&quot;"
+                     name="width"
+                     type="text"
+                     style="width: 95%;"
+                  />
+               </td>
+            </tr>
+
+            <!-- LENGTH will override weight in profileName -->
+            <tr>
+               <td>Length</td>
+               <td>
+                  <input
+                     type="checkbox"
+                  />
+               </td>
+               <td>
+                  <input
+                     id="vehLength"
+                     value="53'"
+                     name="length"
+                     type="text"
+                     style="width: 95%;"
+                  />
+               </td>
+            </tr>
+
+            <!-- WEIGHT will override weight in profileName -->
+            <tr>
+               <td>Weight</td>
+               <td>
+                  <input
+                     type="checkbox"
+                  />
+               </td>
+               <td>
+                  <input
+                     id="vehWeight"
+                     value="80000"
+                     name="weight"
+                     type="text"
+                     style="width: 95%;"
+                  />
+               </td>
+            </tr>            
+
+            
+
+            
+
+            
+
+
+
+
+
+            <!-- HIDDEN OPTIONS SHOWN ONLY WHEN EXPANDED -->
+
+            <!-- ROUTEID -->
+            <tr class="hidden-row">
+               <td >Route ID</td>
+               <td>
+                  <input
+                     type="checkbox"
+                  />
+               </td>
+               <td>
+                  <input
+                     id="RouteID"
+                     value="Route Name"
+                     name="ID"
+                     type="text"
+                     style="width: 95%;"
+                  />
+               </td>
+            </tr>
+
+            <!-- ASSETID -->
+            <tr class="hidden-row">
+               <td >assetId</td>
+               <td>
+                  <input
+                     type="checkbox"
+                  />
+               </td>
+               <td>
+                  <input
+                     value="abc123"
+                     name="assetId"
+                     type="text"
+                     style="width: 95%;"
+                  />
+               </td>
+            </tr>
+
+            <!-- PLACEID -->
+            <tr class="hidden-row">
+               <td>PlaceId</td>
+               <td>
+                  <input
+                     type="checkbox"
+                  />
+               </td>
+               <td>
+                  <input
+                     value="0xXBS0oPl3cEyBAGYYwU10_g"
+                     name="PlaceId"
+                     type="text"
+                     style="width: 95%;"
+                  />
+               </td>
+            </tr>
+
+            <!-- hwyOnly -->
+            <tr class="hidden-row">
+               <td>hwyOnly</td>
+               <td>
+                  <input type="checkbox" />
+               </td>
+               <td>
+                  <select style="width: 97%;">
+                     <option value="0">False</option>
+                     <option value="1">True</option>               
+                  </select>
+               </td>
+            </tr>
+
+            <!-- National Network & State Extensions -->
+            <tr class="hidden-row">
+               <td>National Network & State Extensions</td>
+               <td>
+                  <input type="checkbox" />
+               </td>
+               <td>
+                  <select 
+                     id="overrideClass"
+                     style="width: 97%;">
+                     <option value="0">None (Default)</option>
+                     <option value="1">State Extensions (aka 53' Trailer)</option>               
+                     <option value="2">National Network</option>
+                     <option value="3">National Network + State Extensions</option>
+                  </select>
+               </td>
+            </tr>
+
+            <!-- UNITS -->
+            <tr class="hidden-row">
+               <td>Units</td>
+               <td>
+                  <input type="checkbox" />
+               </td>
+               <td>
+                  <select 
+                     id="distUnits"
+                     style="width: 97%;">
+                     <option value="0">Miles (Default)</option>
+                     <option value="1">Kilometers</option>               
+                  </select>
+               </td>
+            </tr>
+
+            <!-- TOLL ROADS -->
+            <tr class="hidden-row">
+               <td>Tolls Roads</td>
+               <td>
+                  <input type="checkbox" />
+               </td>
+               <td>
+                  <select 
+                     id="tollRoads"
+                     style="width: 97%;">
+                     <option value="1">Always Avoid</option>
+                     <option value="2">Avoid if Possible</option>  
+                     <option value="3">Use</option>              
+                  </select>
+               </td>
+            </tr>
+
+            <!-- AVOID COUNTRY -->
+            <tr class="hidden-row">
+               <td>Avoid Country <a href="https://developer.trimblemaps.com/restful-apis/appendix/country-code/" target="_blank">Country Codes</a></td>
+               <td>
+                  <input type="checkbox" />
+               </td>
+               <td>
+                  <input
+                     id="avoidCountry"
+                     value="BE, LU"
+                     name="Avoid Country"
+                     type="text"
+                     style="width: 95%;"> 
+               </input>
+               </td>
+            </tr>
+
+
+
+
+
+
+
+
+
+            <!-- Expand button -->
+            <tr>
+               <td colspan="3" class="expand-button-cell">
+                  <button id="expandButton" onclick="toggleVisibility()">Expand</button>
+               </td>
+            </tr>
+            <style>
+               .expand-button-cell {
+                  border: none;
+               }
+            </style>
+
+         </tbody>
+      </table>
+   </div>
+
+   <div id="requestUrlDiv">
+      <h3>Request URL</h3>
+      <input type="text" id="requestUrlInput" name="requestUrlInput" placeholder="https://pcmiler.alk.com/apis/rest/v1.0/Service.svc/route/routeReports">
+      <button id="requestUrlSubmit">SUBMIT</button>
+      <button id="requestUrlCopy">COPY</button>
+   </div>
+    
+
+
+
+
+
+   
+   </script>
+   
+</body>
+</html>
