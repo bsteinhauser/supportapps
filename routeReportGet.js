@@ -1,11 +1,12 @@
 document.addEventListener("DOMContentLoaded", function() {
    // Retrieve elements
    var apiKeyInput = document.getElementById('apiKeyInput');
-   var setApiKeyButton = document.getElementById('setApiKey');
-   var clearApiKeyButton = document.getElementById('clearApiKey');
+   var setApiKeyButton = document.getElementById('setApiKeyButton');
+   var clearApiKeyButton = document.getElementById('clearApiKeyButton');
+   var expandButton = document.getElementById('expandButton');
    var requestUrlInput = document.getElementById('requestUrlInput');
-   var requestUrlSubmitButton = document.getElementById('requestUrlSubmit');
-   var requestUrlCopyButton = document.getElementById('requestUrlCopy');
+   var requestUrlSubmitButton = document.getElementById('requestUrlSubmitButton');
+   var requestUrlCopyButton = document.getElementById('requestUrlCopyButton');
    var statusDiv = document.getElementById('statusDiv');
    var errorDiv = document.getElementById('errorDiv');
 
@@ -29,6 +30,11 @@ document.addEventListener("DOMContentLoaded", function() {
       // Clear input value and enable input
       apiKeyInput.value = '';
       apiKeyInput.disabled = false;
+   });
+
+   // Event listener for 'EXPAND' button
+   expandButton.addEventListener('click', function() {
+      toggleVisibility();
    });
 
    // Event listener for 'SUBMIT' button
@@ -72,18 +78,7 @@ document.addEventListener("DOMContentLoaded", function() {
       checkbox.addEventListener('change', updateRequestUrl);
    });
 
-   // Function to toggle visibility of additional query parameters
-   function toggleVisibility() {
-      var additionalRows = document.querySelectorAll('.hidden-row');
-      additionalRows.forEach(function(row) {
-         row.style.display = (row.style.display === 'none' || row.style.display === '') ? 'table-row' : 'none';
-      });
-
-      // Update the button text based on the current state
-      var expandButton = document.getElementById('expandButton');
-      var buttonText = expandButton.textContent === 'Expand' ? 'Collapse' : 'Expand';
-      expandButton.textContent = buttonText;
-   }
+   
 
    // Function to construct and display the API request URL
    function updateRequestUrl() {
@@ -97,6 +92,7 @@ document.addEventListener("DOMContentLoaded", function() {
          .map(function (checkbox) {
             return checkbox.name;
          });
+         console.log('Checked Report Types = ' + reportTypes);
 
       // Get query parameters
       var queryParams = Array.from(queryParamsCheckboxes)
@@ -108,15 +104,17 @@ document.addEventListener("DOMContentLoaded", function() {
             var paramValue = document.getElementById(checkbox.name).value;
             return checkbox.name + '=' + encodeURIComponent(paramValue);
          });
+         console.log('Checked Parameter = ' + queryParams);
 
       // Construct the request URL
       var fullUrl = baseUrl;
       if (reportTypes.length > 0) {
-         fullUrl += '?reportTypes=' + reportTypes.join(',');
+         fullUrl += '?reports=' + reportTypes.join(',');
       }
       if (queryParams.length > 0) {
          fullUrl += (reportTypes.length > 0 ? '&' : '?') + queryParams.join('&');
       }
+      console.log(fullUrl);
 
       // Display the request URL
       requestUrlInput.value = fullUrl;
@@ -176,6 +174,19 @@ document.addEventListener("DOMContentLoaded", function() {
             // Display error if fetch fails
             errorDiv.textContent = 'Fetch Error: ' + error;
          });
+   }
+
+   // Function to toggle visibility of additional query parameters
+   function toggleVisibility() {
+      var additionalRows = document.querySelectorAll('.hidden-row');
+      additionalRows.forEach(function(row) {
+         row.style.display = (row.style.display === 'none' || row.style.display === '') ? 'table-row' : 'none';
+      });
+
+      // Update the button text based on the current state
+      var expandButton = document.getElementById('expandButton');
+      var buttonText = expandButton.textContent === 'Expand' ? 'Collapse' : 'Expand';
+      expandButton.textContent = buttonText;
    }
 
    
