@@ -28,7 +28,7 @@
          border: 1px solid black;
          background-color: rgba(136, 136, 136, 0.205);
       }
-      
+
       label {
          display:block;
          margin-bottom: 5px;
@@ -272,6 +272,7 @@
                <td>
                   <input
                      type="checkbox"
+                     name="vehHeight"
                   />
                </td>
                <td>
@@ -291,6 +292,7 @@
                <td>
                   <input
                      type="checkbox"
+                     name="vehWidth"
                   />
                </td>
                <td>
@@ -310,6 +312,7 @@
                <td>
                   <input
                      type="checkbox"
+                     name="vehLength"
                   />
                </td>
                <td>
@@ -329,6 +332,7 @@
                <td>
                   <input
                      type="checkbox"
+                     name="vehWeight"
                   />
                </td>
                <td>
@@ -340,19 +344,12 @@
                      style="width: 95%;"
                   />
                </td>
-            </tr>            
-
-            
-
-            
-
-            
+            </tr>    
 
 
-
-
-
+            <!-- --------------------------------------- -->
             <!-- HIDDEN OPTIONS SHOWN ONLY WHEN EXPANDED -->
+            <!-- --------------------------------------- -->
 
             <!-- ROUTEID -->
             <tr class="hidden-row">
@@ -360,11 +357,12 @@
                <td>
                   <input
                      type="checkbox"
+                     name="routeId"
                   />
                </td>
                <td>
                   <input
-                     id="RouteID"
+                     id="routeId"
                      value="Route Name"
                      name="ID"
                      type="text"
@@ -375,10 +373,11 @@
 
             <!-- ASSETID -->
             <tr class="hidden-row">
-               <td >assetId</td>
+               <td >Asset ID</td>
                <td>
                   <input
                      type="checkbox"
+                     name="assetId"
                   />
                </td>
                <td>
@@ -393,10 +392,11 @@
 
             <!-- PLACEID -->
             <tr class="hidden-row">
-               <td>PlaceId</td>
+               <td>Place ID</td>
                <td>
                   <input
                      type="checkbox"
+                     name="PlaceId"
                   />
                </td>
                <td>
@@ -413,12 +413,16 @@
             <tr class="hidden-row">
                <td>hwyOnly</td>
                <td>
-                  <input type="checkbox" />
+                  <input 
+                     type="checkbox" 
+                     name="hwyOnly" />
                </td>
                <td>
-                  <select style="width: 97%;">
-                     <option value="0">False</option>
-                     <option value="1">True</option>               
+                  <select 
+                     id="hwyOnly" 
+                     style="width: 97%;">
+                     <option value="false">False</option>
+                     <option value="true">True</option>               
                   </select>
                </td>
             </tr>
@@ -427,7 +431,9 @@
             <tr class="hidden-row">
                <td>National Network & State Extensions</td>
                <td>
-                  <input type="checkbox" />
+                  <input 
+                     type="checkbox"
+                     name="overrideClass" />
                </td>
                <td>
                   <select 
@@ -445,7 +451,9 @@
             <tr class="hidden-row">
                <td>Units</td>
                <td>
-                  <input type="checkbox" />
+                  <input 
+                     type="checkbox"
+                     name="distUnits" />
                </td>
                <td>
                   <select 
@@ -461,7 +469,9 @@
             <tr class="hidden-row">
                <td>Tolls Roads</td>
                <td>
-                  <input type="checkbox" />
+                  <input 
+                     type="checkbox"
+                     name="tollRoads" />
                </td>
                <td>
                   <select 
@@ -478,7 +488,9 @@
             <tr class="hidden-row">
                <td>Avoid Country <a href="https://developer.trimblemaps.com/restful-apis/appendix/country-code/" target="_blank">Country Codes</a></td>
                <td>
-                  <input type="checkbox" />
+                  <input 
+                     type="checkbox"
+                     name="avoidCountry" />
                </td>
                <td>
                   <input
@@ -490,6 +502,156 @@
                </input>
                </td>
             </tr>
+
+            <!-- AVOID STATE -->
+            <tr class="hidden-row">
+               <td>Avoid State</br> (NA Only) <a href="https://developer.trimblemaps.com/restful-apis/appendix/country-code/#statesprovinces-in-the-united-states--canada" target="_blank"></br>State Codes</a></td>
+               <td>
+                  <input 
+                     type="checkbox"
+                     name="avoidState" />
+               </td>
+               <td>
+                  <input
+                     id="avoidState"
+                     value="NJ,PA,NY"
+                     name="Avoid Country"
+                     type="text"
+                     style="width: 95%;"> 
+               </input>
+               </td>
+            </tr>
+
+            <!-- FAVOR COUNTRY -->
+            <tr class="hidden-row">
+               <td>Favor Country <a href="https://developer.trimblemaps.com/restful-apis/appendix/country-code/" target="_blank">Country Codes</a></td>
+               <td>
+                  <input 
+                     type="checkbox"
+                     name="favorCountry" />
+               </td>
+               <td>
+                  <input
+                     id="favorCountry"
+                     value="BE, LU"
+                     name="Favor Country"
+                     type="text"
+                     style="width: 95%;"> 
+               </input>
+               </td>
+            </tr>
+
+            <!-- FAVOR STATE -->
+            <tr class="hidden-row">
+               <td>Favor State</br> (NA Only) <a href="https://developer.trimblemaps.com/restful-apis/appendix/country-code/#statesprovinces-in-the-united-states--canada" target="_blank"></br>State Codes</a></td>
+               <td>
+                  <input 
+                     type="checkbox"
+                     name="favorState" />
+               </td>
+               <td>
+                  <input
+                     id="favorState"
+                     value="NJ,PA,NY"
+                     name="Favor Country"
+                     type="text"
+                     style="width: 95%;"> 
+               </input>
+               </td>
+            </tr>
+
+            <!-- OPEN BORDERS -->
+            <tr>
+               <td>Open Borders</td>
+               <td>
+                  <input 
+                     name="openBorders"
+                     type="checkbox" />
+               </td>
+               <td>
+                  <select
+                     id="openBorders"
+                     style="width: 97%;">
+                     <option value="true">True (Default)</option> 
+                     <option value="false">False</option>                                
+                  </select>
+               </td>
+            </tr>
+
+            <!-- OVERRIDE RESTRICTIONS -->
+            <tr>
+               <td>Override Restrictions</td>
+               <td>
+                  <input 
+                     name="restrOverrides"
+                     type="checkbox" />
+               </td>
+               <td>
+                  <select
+                     id="restrOverrides"
+                     style="width: 97%;">
+                     <option value="false">False (Default)</option>
+                     <option value="true">True</option>                                 
+                  </select>
+               </td>
+            </tr>
+
+            <!-- HAZMAT -->
+            <tr class="hidden-row">
+               <td>HazMat</td>
+               <td>
+                  <input 
+                     type="checkbox"
+                     name="hazMat" />
+               </td>
+               <td>
+                  <select 
+                     id="hazMat"
+                     style="width: 97%;">
+                     <option value="0">None (Default)</option>
+                     <option value="1">General</option>
+                     <option value="2">Caustic</option>  
+                     <option value="3">Explosives</option>  
+                     <option value="4">Flammable</option>
+                     <option value="5">Inhalants</option>  
+                     <option value="6">Radioactive</option>           
+                     <option value="7">HarmfulToWater</option>
+                     <option value="8">Tunnel</option>                     
+                  </select>
+               </td>
+            </tr>
+
+            <!-- HAZMAT TYPES -->
+            <tr>
+               <!--class="hidden-row">  -->
+            </tr> 
+               <td>HazMat Types<br>(For Multiple HazMat Types)</td>
+               <td>
+                  <input 
+                     type="checkbox"
+                     name="hazMatTypes" />
+               </td>
+               <td>
+                  <select                     
+                     id="hazMatTypes"
+                     multiple style="width:97%;"
+                     >
+                        <option value="0">None</option>
+                        <option value="1">General</option>
+                        <option value="2">Caustic</option>
+                        <option value="3">Explosives</option>
+                        <option value="4">Flammable</option>
+                        <option value="5">Inhalants</option>
+                        <option value="6">Radioactive</option>
+                        <option value="7">HarmfulToWater</option>
+                        <option value="8">Tunnel</option>
+                  </select>
+               </td>
+            </tr>
+
+
+
+
 
 
 

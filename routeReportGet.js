@@ -78,6 +78,9 @@ document.addEventListener("DOMContentLoaded", function() {
       checkbox.addEventListener('change', updateRequestUrl);
    });
 
+   // Event listener for the hazMatTypes multi-selection dropdown
+   var hazMatTypesDropdown = document.getElementById('hazMatTypes');
+   hazMatTypesDropdown.addEventListener('change', updateRequestUrl);
    
 
    // Function to construct and display the API request URL
@@ -90,9 +93,10 @@ document.addEventListener("DOMContentLoaded", function() {
             return checkbox.checked;
          })
          .map(function (checkbox) {
-            return checkbox.name;
+            return (checkbox.name);
          });
-         console.log('Checked Report Types = ' + reportTypes);
+
+      console.log('Checked Report Types = ' + reportTypes);
 
       // Get query parameters
       var queryParams = Array.from(queryParamsCheckboxes)
@@ -104,21 +108,61 @@ document.addEventListener("DOMContentLoaded", function() {
             var paramValue = document.getElementById(checkbox.name).value;
             return checkbox.name + '=' + encodeURIComponent(paramValue);
          });
-         console.log('Checked Parameter = ' + queryParams);
+
+      console.log('Checked Parameters = ' + queryParams);
+
+      // Get HazMat Types checkbox
+      var hazMatTypesCheckbox = document.querySelector('input[name="hazMatTypes"]');
+
+      // Check if HazMat Types checkbox is checked
+      if (hazMatTypesCheckbox.checked) {
+         // Get selected values from hazMatTypes multi-selection dropdown
+         var hazMatTypesValues = Array.from(hazMatTypesDropdown.selectedOptions)
+            .map(function (option) {
+                  return encodeURIComponent(option.value);
+            });
+
+         // Construct the hazMatTypes parameter
+         var hazMatTypesParam = hazMatTypesValues.length > 0 ? 'hazMatTypes=' + hazMatTypesValues.join(',') : '';
+
+         // Remove any existing hazMatTypesParam
+         queryParams = queryParams.filter(function (param) {
+            return !param.startsWith('hazMatTypes=');
+         });
+
+         // Append hazMatTypesParam directly without 'hazMatTypes=' prefix
+         if (hazMatTypesParam !== '') {
+            queryParams.push(hazMatTypesParam);
+         }
+      }
+
+      // Combine all parameters
+      var allParams = [];
+
+      // Add reportTypes if selected
+      if (reportTypes.length > 0) {
+         allParams.push('reports=' + reportTypes.join(','));
+      }
+
+      // Add other queryParams
+      if (queryParams.length > 0) {
+         allParams = allParams.concat(queryParams);
+      }
 
       // Construct the request URL
       var fullUrl = baseUrl;
-      if (reportTypes.length > 0) {
-         fullUrl += '?reports=' + reportTypes.join(',');
+
+      // Add '?' only if there are parameters
+      if (allParams.length > 0) {
+         fullUrl += '?' + allParams.join('&');
       }
-      if (queryParams.length > 0) {
-         fullUrl += (reportTypes.length > 0 ? '&' : '?') + queryParams.join('&');
-      }
+
       console.log(fullUrl);
 
       // Display the request URL
       requestUrlInput.value = fullUrl;
    }
+
 
    // Function to make the API call
    function makeApiCall() {
