@@ -127,7 +127,7 @@ const apiData = {
 };
 
     // Make API call for reverse geocoding
-    fetch('http://pcmiler.alk.com/apis/rest/v1.0/service.svc/locations/address/batch', {
+    fetch('https://pcmiler.alk.com/apis/rest/v1.0/service.svc/locations/address/batch', {
         method: 'POST',
         headers: {
             'Authorization': '5528D85F750D8A4E8D1D070688808F08',

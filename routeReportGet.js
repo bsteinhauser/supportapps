@@ -1,11 +1,12 @@
 document.addEventListener("DOMContentLoaded", function() {
    // Retrieve elements
    var apiKeyInput = document.getElementById('apiKeyInput');
-   var setApiKeyButton = document.getElementById('setApiKey');
-   var clearApiKeyButton = document.getElementById('clearApiKey');
+   var setApiKeyButton = document.getElementById('setApiKeyButton');
+   var clearApiKeyButton = document.getElementById('clearApiKeyButton');
+   var expandButton = document.getElementById('expandButton');
    var requestUrlInput = document.getElementById('requestUrlInput');
-   var requestUrlSubmitButton = document.getElementById('requestUrlSubmit');
-   var requestUrlCopyButton = document.getElementById('requestUrlCopy');
+   var requestUrlSubmitButton = document.getElementById('requestUrlSubmitButton');
+   var requestUrlCopyButton = document.getElementById('requestUrlCopyButton');
    var statusDiv = document.getElementById('statusDiv');
    var errorDiv = document.getElementById('errorDiv');
 
@@ -29,6 +30,11 @@ document.addEventListener("DOMContentLoaded", function() {
       // Clear input value and enable input
       apiKeyInput.value = '';
       apiKeyInput.disabled = false;
+   });
+
+   // Event listener for 'EXPAND' button
+   expandButton.addEventListener('click', function() {
+      toggleVisibility();
    });
 
    // Event listener for 'SUBMIT' button
@@ -61,6 +67,44 @@ document.addEventListener("DOMContentLoaded", function() {
       }
    });
 
+   // Add event listener for COPY button
+   var responseCopyButton = document.getElementById('responseCopyButton');
+   responseCopyButton.addEventListener('click', function() {
+      // Select the response text area
+      var responseTextArea = document.getElementById('responseTextArea');
+      responseTextArea.select();
+
+      try {
+         // Copy the selected text to the clipboard
+         document.execCommand('copy');
+         console.log('Response copied to clipboard');
+      } catch (err) {
+         console.error('Unable to copy response to clipboard', err);
+      }
+   });
+   
+
+   // Add event listener for SAVE button
+   var responseSaveButton = document.getElementById('responseSaveButton');
+   responseSaveButton.addEventListener('click', function() {
+      // Retrieve the response text
+      var responseText = document.getElementById('responseTextArea').value;
+
+      // Create a Blob containing the response text
+      var blob = new Blob([responseText], { type: 'json' });
+
+      // Create a link element for downloading
+      var link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+
+      // Prompt user to save the file
+      link.download = 'api_response.json';
+      link.click();
+
+      console.log('Response saved to file');
+   });
+
+
    // Event listeners for checkbox changes in reportTypeDiv and queryParamsDiv
    var reportTypeCheckboxes = document.querySelectorAll('.checklistContainer input[type="checkbox"]');
    reportTypeCheckboxes.forEach(function(checkbox) {
@@ -72,22 +116,16 @@ document.addEventListener("DOMContentLoaded", function() {
       checkbox.addEventListener('change', updateRequestUrl);
    });
 
-   // Function to toggle visibility of additional query parameters
-   function toggleVisibility() {
-      var additionalRows = document.querySelectorAll('.hidden-row');
-      additionalRows.forEach(function(row) {
-         row.style.display = (row.style.display === 'none' || row.style.display === '') ? 'table-row' : 'none';
-      });
-
-      // Update the button text based on the current state
-      var expandButton = document.getElementById('expandButton');
-      var buttonText = expandButton.textContent === 'Expand' ? 'Collapse' : 'Expand';
-      expandButton.textContent = buttonText;
-   }
+   // Event listener for the hazMatTypes multi-selection dropdown
+   var hazMatTypesDropdown = document.getElementById('hazMatTypes');
+   hazMatTypesDropdown.addEventListener('change', updateRequestUrl);
+   
 
    // Function to construct and display the API request URL
    function updateRequestUrl() {
       var baseUrl = 'https://pcmiler.alk.com/apis/rest/v1.0/Service.svc/route/routeReports';
+
+      
 
       // Get report types
       var reportTypes = Array.from(reportTypeCheckboxes)
@@ -95,8 +133,10 @@ document.addEventListener("DOMContentLoaded", function() {
             return checkbox.checked;
          })
          .map(function (checkbox) {
-            return checkbox.name;
+            return (checkbox.name);
          });
+
+      console.log('Checked Report Types = ' + reportTypes);
 
       // Get query parameters
       var queryParams = Array.from(queryParamsCheckboxes)
@@ -109,18 +149,60 @@ document.addEventListener("DOMContentLoaded", function() {
             return checkbox.name + '=' + encodeURIComponent(paramValue);
          });
 
+      console.log('Checked Parameters = ' + queryParams);
+
+      // Get HazMat Types checkbox
+      var hazMatTypesCheckbox = document.querySelector('input[name="hazMatTypes"]');
+
+      // Check if HazMat Types checkbox is checked
+      if (hazMatTypesCheckbox.checked) {
+         // Get selected values from hazMatTypes multi-selection dropdown
+         var hazMatTypesValues = Array.from(hazMatTypesDropdown.selectedOptions)
+            .map(function (option) {
+                  return encodeURIComponent(option.value);
+            });
+
+         // Construct the hazMatTypes parameter
+         var hazMatTypesParam = hazMatTypesValues.length > 0 ? 'hazMatTypes=' + hazMatTypesValues.join(',') : '';
+
+         // Remove any existing hazMatTypesParam
+         queryParams = queryParams.filter(function (param) {
+            return !param.startsWith('hazMatTypes=');
+         });
+
+         // Append hazMatTypesParam directly without 'hazMatTypes=' prefix
+         if (hazMatTypesParam !== '') {
+            queryParams.push(hazMatTypesParam);
+         }
+      }
+
+      // Combine all parameters
+      var allParams = [];
+
+      // Add reportTypes if selected
+      if (reportTypes.length > 0) {
+         allParams.push('reports=' + reportTypes.join(','));
+      }
+
+      // Add other queryParams
+      if (queryParams.length > 0) {
+         allParams = allParams.concat(queryParams);
+      }
+
       // Construct the request URL
       var fullUrl = baseUrl;
-      if (reportTypes.length > 0) {
-         fullUrl += '?reportTypes=' + reportTypes.join(',');
+
+      // Add '?' only if there are parameters
+      if (allParams.length > 0) {
+         fullUrl += '?' + allParams.join('&');
       }
-      if (queryParams.length > 0) {
-         fullUrl += (reportTypes.length > 0 ? '&' : '?') + queryParams.join('&');
-      }
+
+      console.log(fullUrl);
 
       // Display the request URL
       requestUrlInput.value = fullUrl;
    }
+
 
    // Function to make the API call
    function makeApiCall() {
@@ -159,7 +241,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
             // Check for successful response
             if (response.ok) {
-               return response.json();
+               return response.text();
             } else {
                // Display error message
                return response.text().then(error => {
@@ -169,13 +251,26 @@ document.addEventListener("DOMContentLoaded", function() {
          })
          .then(data => {
             // Display the response
-            var responseDiv = document.getElementById('responseDiv');
-            responseDiv.textContent = JSON.stringify(data, null, 2);
+            var responseTextArea = document.getElementById('responseTextArea');
+            responseTextArea.textContent = data;
          })
          .catch(error => {
             // Display error if fetch fails
             errorDiv.textContent = 'Fetch Error: ' + error;
          });
+   }
+
+   // Function to toggle visibility of additional query parameters
+   function toggleVisibility() {
+      var additionalRows = document.querySelectorAll('.hidden-row');
+      additionalRows.forEach(function(row) {
+         row.style.display = (row.style.display === 'none' || row.style.display === '') ? 'table-row' : 'none';
+      });
+
+      // Update the button text based on the current state
+      var expandButton = document.getElementById('expandButton');
+      var buttonText = expandButton.textContent === 'Expand' ? 'Collapse' : 'Expand';
+      expandButton.textContent = buttonText;
    }
 
    
