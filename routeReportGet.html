@@ -16,7 +16,8 @@
       #apiKeyInput {width: 300px; margin-bottom: 20px;}
       #reportTypeDiv {margin-bottom: 50px;}
       #queryParamsDiv {margin-bottom: 50px; width: 600px;}   
-      #requestUrlInput {width: 500px;}   
+      #requestUrlInput {width: 500px;}  
+      
 
 
       /* Style for report type checkboxes */
@@ -96,8 +97,8 @@
       <h1>RouteReport GET</h1>
       <a href = "https://developer.trimblemaps.com/restful-apis/routing/route-reports/get-route-reports/" target="_blank">API Documentation</a>
       <p>
-         With our Route Reports API, you can create a route and retrieve a wide range of information about it. Everything from PC*MILER practical miles and turn-by-turn directions to trip costs and a detailed route path. Each route can be customized with a wide range of settings to fit your vehicles and business needs.</br>
-         For each route report request, a minimum of two stops (origin and destination) and one or more requested reports are required. The report response returns a list of reports in JSON format.
+         This tool can be used to make Route Report API calls.  This is handy for troubleshooting customer issues.  Enter the API key, select Report Types, Parameters and click SUBMIT.</br></br>
+         <b>NOTE:</b> Each request must have a minimum of two stops (origin and destination) and one or more report types. The response returns a list of reports in JSON format.
       </p>
    </div>
    <hr> 
@@ -679,7 +680,11 @@
 
    <div id="requestUrlDiv">
       <h3>Request URL</h3>
-      <input type="text" id="requestUrlInput" name="requestUrlInput" value="https://pcmiler.alk.com/apis/rest/v1.0/Service.svc/route/routeReports">
+      <input 
+         type="text" 
+         id="requestUrlInput" 
+         name="requestUrlInput" 
+         value="https://pcmiler.alk.com/apis/rest/v1.0/Service.svc/route/routeReports">
       <button id="requestUrlSubmitButton">SUBMIT</button>
       <button id="requestUrlCopyButton">COPY</button>
    </div>
@@ -687,6 +692,21 @@
    <div id="statusDiv"></div>
    <div id="errorDiv" style="color: red;"></div>
 
+   <hr>
+
+   <div id="responseDiv">
+      <h3>Response</h3>
+      <button id="responseCopyButton">COPY</button>
+      <button id="responseSaveButton">SAVE</button>
+      <br>
+      <textarea 
+         id="responseTextArea"
+         style="width: 600px; height: 500px"
+         readonly
+         ></textarea>
+      >
+      </textarea>
+   </div>
 
    
     

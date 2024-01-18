@@ -67,6 +67,44 @@ document.addEventListener("DOMContentLoaded", function() {
       }
    });
 
+   // Add event listener for COPY button
+   var responseCopyButton = document.getElementById('responseCopyButton');
+   responseCopyButton.addEventListener('click', function() {
+      // Select the response text area
+      var responseTextArea = document.getElementById('responseTextArea');
+      responseTextArea.select();
+
+      try {
+         // Copy the selected text to the clipboard
+         document.execCommand('copy');
+         console.log('Response copied to clipboard');
+      } catch (err) {
+         console.error('Unable to copy response to clipboard', err);
+      }
+   });
+   
+
+   // Add event listener for SAVE button
+   var responseSaveButton = document.getElementById('responseSaveButton');
+   responseSaveButton.addEventListener('click', function() {
+      // Retrieve the response text
+      var responseText = document.getElementById('responseTextArea').value;
+
+      // Create a Blob containing the response text
+      var blob = new Blob([responseText], { type: 'json' });
+
+      // Create a link element for downloading
+      var link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+
+      // Prompt user to save the file
+      link.download = 'api_response.json';
+      link.click();
+
+      console.log('Response saved to file');
+   });
+
+
    // Event listeners for checkbox changes in reportTypeDiv and queryParamsDiv
    var reportTypeCheckboxes = document.querySelectorAll('.checklistContainer input[type="checkbox"]');
    reportTypeCheckboxes.forEach(function(checkbox) {
@@ -86,6 +124,8 @@ document.addEventListener("DOMContentLoaded", function() {
    // Function to construct and display the API request URL
    function updateRequestUrl() {
       var baseUrl = 'https://pcmiler.alk.com/apis/rest/v1.0/Service.svc/route/routeReports';
+
+      
 
       // Get report types
       var reportTypes = Array.from(reportTypeCheckboxes)
@@ -201,7 +241,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
             // Check for successful response
             if (response.ok) {
-               return response.json();
+               return response.text();
             } else {
                // Display error message
                return response.text().then(error => {
@@ -211,8 +251,8 @@ document.addEventListener("DOMContentLoaded", function() {
          })
          .then(data => {
             // Display the response
-            var responseDiv = document.getElementById('responseDiv');
-            responseDiv.textContent = JSON.stringify(data, null, 2);
+            var responseTextArea = document.getElementById('responseTextArea');
+            responseTextArea.textContent = data;
          })
          .catch(error => {
             // Display error if fetch fails
