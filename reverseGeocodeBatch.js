@@ -129,7 +129,7 @@ let lonIndex = -1;
   
 
   // Make API call
-  fetch('http://pcmiler.alk.com/apis/rest/v1.0/service.svc/locations/reverse/batch', {
+  fetch('https://pcmiler.alk.com/apis/rest/v1.0/service.svc/locations/reverse/batch', {
     method: 'POST',
     headers: {
       'Authorization': '5528D85F750D8A4E8D1D070688808F08',
