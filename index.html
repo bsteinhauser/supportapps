@@ -44,7 +44,7 @@
         
       
 
-      <div>
+      <div id="geocodingDiv">
         <!-- Geocode Button -->
         <button id="geocodeButton">Geocode</button>
           <script>
@@ -96,6 +96,24 @@
               });
             </script>  
       </div>
+
+      <hr>
+
+      <h3><a href="https://developer.trimblemaps.com/restful-apis/routing/route-reports/overview/" target="_blank">Route Report APIs</a></h3>
+
+      <div id="routeReportsDiv">
+        <!-- Route Report GET Button -->
+        <button id="routeReportGetButton">Route Report GET</button>
+        <script>
+          const routeReportGetButton = document.getElementById('routeReportGetButton');
+          routeReportGetButton.addEventListener('click', function() {
+            window.location.href = 'routeReportGet.html';
+          })
+        </script>
+      </div>
+
+
+
         
 
   </body>

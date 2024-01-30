@@ -7,7 +7,7 @@
    <script src="https://maps-sdk.trimblemaps.com/v3/trimblemaps-3.12.0.js"></script>
    <script src="https://maps-sdk.trimblemaps.com/addon/trimblemaps-mapmenus-1.0.7.js"></script>
    <link href="https://maps-sdk.trimblemaps.com/addon/trimblemaps-mapmenus-1.0.7.css" rel="stylesheet">
-   <title>RouteReport GET</title>
+   <title>RouteReport POST</title>
    
    <style>
       h3 {margin-bottom: 5px;}
@@ -15,8 +15,7 @@
 
       #apiKeyInput {width: 300px; margin-bottom: 20px;}
       #reportTypeDiv {margin-bottom: 50px;}
-      #queryParamsDiv {margin-bottom: 50px; width: 600px;}   
-      #requestUrlInput {width: 500px;}  
+      #queryParamsDiv {margin-bottom: 50px; width: 600px;}    
       
 
 
@@ -94,7 +93,7 @@
 </head>
 <body>
    <div id="header">
-      <h1>RouteReport GET</h1>
+      <h1>RouteReport POST</h1>
       <a href = "https://developer.trimblemaps.com/restful-apis/routing/route-reports/get-route-reports/" target="_blank">API Documentation</a>
       <p>
          This tool can be used to make Route Report API calls.  This is handy for troubleshooting customer issues.  Enter the API key, select Report Types, Parameters and click SUBMIT.</br></br>
@@ -148,6 +147,20 @@
       </div>
    </div>
 
+
+   <label for="csvFile">Select CSV File:</label>
+   <input type="file" id="csvFile" accept=".csv">
+   <button onclick="processCSV()">Process CSV</button>
+
+
+
+
+   
+    
+
+
+
+
    <div id="queryParamsDiv">
       <table id="queryParams" class="table table-sm notranslate">
          <h3>Parameters</h3>
@@ -170,6 +183,27 @@
                      id="stops"
                      value="-75.173297,39.942892;-74.83153,39.61703;-74.438942,39.362469"
                      name="stops"
+                     type="text"
+                     required=""
+                     style="width: 95%;"
+                  />
+               </td>
+            </tr>
+
+            <!-- Data Version -->
+            <tr>
+               <td>Data Version</td>
+               <td>
+                  <input
+                     type="checkbox"
+                     name="dataVersion"
+                  />
+               </td>
+               <td>
+                  <input
+                     id="dataVersion"
+                     value="PCM37"
+                     name="dataVersion"
                      type="text"
                      required=""
                      style="width: 95%;"
@@ -679,15 +713,15 @@
       </table>
    </div>
 
-   <div id="requestUrlDiv">
-      <h3>Request URL</h3>
-      <input 
-         type="text" 
-         id="requestUrlInput" 
-         name="requestUrlInput" 
-         value="https://pcmiler.alk.com/apis/rest/v1.0/Service.svc/route/routeReports">
-      <button id="requestUrlSubmitButton">SUBMIT</button>
-      <button id="requestUrlCopyButton">COPY</button>
+   <div id="requestBodyInputDiv">
+      <h3>Request Body</h3>
+      <button id="requestBodySubmitButton">SUBMIT</button>
+      <button id="requestBodyCopyButton">COPY</button>
+      <textarea  
+         id="requestBodyInput" 
+         name="requestBodyInput"
+         style="width: 600px; height: 500px" 
+      ></textarea>
    </div>
 
    <div id="statusDiv"></div>
@@ -704,9 +738,7 @@
          id="responseTextArea"
          style="width: 600px; height: 500px"
          readonly
-         ></textarea>
-      >
-      </textarea>
+      ></textarea>
    </div>
 
    
