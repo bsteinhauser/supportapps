@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        #resultLabel, #statusDiv {
+            display: inline-block;
+            vertical-align: top; /* Aligns the elements vertically */
+        }
+    </style>
+    <title>JSON to Base64 Encoder</title>
+</head>
+<body>
+<h1>URL Launch Converter</h1>
+<p>This tool will convert a JSON object to a Base64 Encoded object and append it to our base URL.<br>The end result is a URL ready for use with CoPilot's URL Launch.</p>
+
+<a href="https://developer.trimblemaps.com/copilot-navigation/feature-guide/advanced-features/url-launch2/" target="_blank"> Documentation</a>
+
+<hr>
+
+<label for="jsonInput">Enter JSON:</label>
+<br>
+<textarea id="jsonInput" rows="20" cols="80"></textarea>
+<br>
+<button onclick="convertToBase64()">Encode</button>
+<button onclick="clearFields()">Clear</button>
+
+<br><br>
+
+<label for="result">Result:</label>
+<div id="statusDiv"></div>
+<br>
+<textarea id="result" rows="20" cols="80" readonly></textarea>
+
+
+<script>
+function convertToBase64() {
+    try {
+
+        // Get JSON input from the user
+        var jsonInput = document.getElementById("jsonInput").value.trim();
+
+        // Encode JSON to base64
+        var base64Encoded = btoa(jsonInput);
+
+        // Prefix with specified text
+        var resultText = 'copilot://options?type=TASKS&JSON=' + base64Encoded;
+
+        // Display the result
+        document.getElementById("result").value = resultText;        
+
+        // Copy the text in the result textarea to the clipboard
+        var resultText = document.getElementById("result");
+        resultText.select();
+        document.execCommand("copy");
+
+        // Display 'Copied to Clipboard Text'
+        setStatusText('URL Copilot To Clipboard');
+        
+
+    } catch (error) {
+        document.getElementById("result").value = "Error: " + error.message;
+    }
+}
+
+function clearFields() {
+    // Clear both textboxes
+    document.getElementById("jsonInput").value = "";
+    document.getElementById("result").value = "";
+
+    // Clear the status div
+    setStatusText('');
+}
+
+function setStatusText(text) {
+    // Set the status text with yellow background color and bold font
+    var statusDiv = document.getElementById("statusDiv");
+    statusDiv.style.backgroundColor = "yellow";
+    statusDiv.style.fontWeight = "bold";
+    statusDiv.innerText = text;
+    statusDiv.style.display = "inline-block"; // Ensure div width is only as wide as its content
+}
+
+</script>
+
+</body>
+</html>
