@@ -40,7 +40,7 @@
       <h2>Below are various tools to assist you in troubleshooting</h2>
       
       
-      <h3><a href="https://developer.trimblemaps.com/restful-apis/location/geocoding-api/overview/" target="_blank">Geocoding APIs</a></h3>
+      <h3>Geocoding APIs</h3>
         
       
 
@@ -99,7 +99,7 @@
 
       <hr>
 
-      <h3><a href="https://developer.trimblemaps.com/restful-apis/routing/route-reports/overview/" target="_blank">Route Report APIs</a></h3>
+      <h3>Route Report APIs</h3>
 
       <div id="routeReportsDiv">
         <!-- Route Report GET Button -->
@@ -108,6 +108,21 @@
           const routeReportGetButton = document.getElementById('routeReportGetButton');
           routeReportGetButton.addEventListener('click', function() {
             window.location.href = 'routeReportGet.html';
+          })
+        </script>
+      </div>
+
+      <hr>
+
+      <h3>URL Launch Encoder</h3>
+
+      <div id="urlLaunchDiv">
+        <!-- Route Report GET Button -->
+        <button id="urlLaunchButton">Route Report GET</button>
+        <script>
+          const urlLaunchButton = document.getElementById('urlLaunchButton');
+          urlLaunchButton.addEventListener('click', function() {
+            window.location.href = 'urlLaunchEncoder.html';
           })
         </script>
       </div>
