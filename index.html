@@ -40,10 +40,7 @@
       <h2>Below are various tools to assist you in troubleshooting</h2>
       
       
-      <h3>Geocoding APIs</h3>
-        
-      
-
+      <h3><a href="https://developer.trimblemaps.com/restful-apis/location/geocoding-api/overview/" target="_blank">Geocoding APIs</a></h3> 
       <div id="geocodingDiv">
         <!-- Geocode Button -->
         <button id="geocodeButton">Geocode</button>
@@ -99,8 +96,7 @@
 
       <hr>
 
-      <h3>Route Report APIs</h3>
-
+      <h3><a href="https://developer.trimblemaps.com/restful-apis/routing/route-reports/overview/" target="_blank">Route Report APIs</a></h3>
       <div id="routeReportsDiv">
         <!-- Route Report GET Button -->
         <button id="routeReportGetButton">Route Report GET</button>
@@ -114,11 +110,10 @@
 
       <hr>
 
-      <h3>URL Launch Encoder</h3>
-
+      <h3><a href="https://developer.trimblemaps.com/copilot-navigation/feature-guide/advanced-features/url-launch2/" target="_blank">URL Launch Encoder</a></h3>
       <div id="urlLaunchDiv">
         <!-- Route Report GET Button -->
-        <button id="urlLaunchButton">Route Report GET</button>
+        <button id="urlLaunchButton">URL Launch Encoder</button>
         <script>
           const urlLaunchButton = document.getElementById('urlLaunchButton');
           urlLaunchButton.addEventListener('click', function() {
@@ -127,6 +122,19 @@
         </script>
       </div>
 
+      <hr>
+
+      <h3><a href="https://developer.trimblemaps.com/restful-apis/fleet-configuration/introduction/" target="_blank">Fleet APIs</a></h3>
+      <div id="vehicleDeleteBatchDiv">
+        <!-- Route Report GET Button -->
+        <button id="vehicleDeleteBatchButton">Vehicle Delete (Batch)</button>
+        <script>
+          const vehicleDeleteBatchButton = document.getElementById('vehicleDeleteBatchButton');
+          vehicleDeleteBatchButton.addEventListener('click', function() {
+            window.location.href = 'vehicleDeleteBatch.html';
+          })
+        </script>
+      </div>
 
 
         
