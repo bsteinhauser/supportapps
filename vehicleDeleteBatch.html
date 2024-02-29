@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/js/jquery.tablesorter.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+
+    <style>
+        h4 {
+            margin-bottom: 5px; /* Adjust the value as needed */
+      }
+
+      input#fileInput {
+          margin-bottom: 10px; /* Adjust the value as needed */
+      }
+
+      #fileInput {
+        width: 100%;
+      }
+
+      input#apiKeyInput {
+        width: 350px;
+      }
+
+      p {
+        margin-top: 5px;
+        margin-bottom: 5px;
+        font-size: 10pt;
+        font-style:oblique
+      }
+
+      h5 {
+        margin-bottom: 5px;
+      }
+
+      button#runButton {
+        margin-top: 30px;
+        background-color: #4CAF50; /* Green */
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        cursor: pointer;
+      }
+
+      button#runButton:disabled {
+        background-color: #cccccc; /* Grey */
+        cursor: not-allowed;
+      }
+
+      #resultsTable {
+            width: 100%;
+            border-collapse: collapse;
+            overflow-y: auto;
+            max-height: 300px; /* Adjust the max-height as needed */
+        }
+
+        #resultsTable th {
+            background-color: #f2f2f2; /* Light grey background for headers */
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        #resultsTable td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        #exportButton, #resultsTable, #completionMessage, #progressBar {
+        display: none; /* Hide the button and table initially */
+        }
+
+        #completionMessage {
+            margin-bottom: 10px;
+        }
+
+
+      
+    </style>
+    <title>Vehicle Delete Batch</title>
+    
+
+</head>
+<body>
+<h1>Vehicle Delete Batch</h1>
+<h5>This tool can be used to perform a batch delete of vehicles from FleetPortal.<br>It reads a CSV input file and makes a call to delete a vehicle. That process is repeated until all vehicles from the input file are deleted.</h5>
+
+<a href="https://developer.trimblemaps.com/restful-apis/fleet-configuration/create-and-modify-vehicles/#delete-a-vehicle" target="_blank"> Documentation</a>
+
+<hr>
+
+<h4>API Key:</h4>
+<input type="text" id="apiKeyInput" name="apiKeyInput">
+
+<h4>Customer Alias:</h4>
+<p>Only needed for Partner level</p>
+<input type="text" id="customerAliasInput" name="customerAliasInput">
+
+<h4>Select CSV file</h4>
+
+      <!-- Add the file input, error div and status div -->
+      <input type="file" id="fileInput" accept=".csv" onchange="handleFile()">
+      <div id="errorDiv" style="color: red;"></div>
+      <div id="statusDiv"></div>
+
+
+    <button id="runButton" disabled>RUN</button>
+
+    <progress id="progressBar" value="0" max="100"></progress>
+
+    <hr>
+    <div id="completionMessage"></div> <!-- Added div for completion message -->
+    <button id="exportButton">Export to CSV</button>
+
+    <table id="resultsTable">
+        <thead>
+            <tr>
+                <th>Vehicle ID</th>
+                <th>Status Code</th>
+                <th>Response Body</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    
+
+<script>
+    document.getElementById('fileInput').addEventListener('change', handleFile);
+    document.getElementById('runButton').addEventListener('click', runBatchOperation);
+
+    let bearerToken;
+
+    function handleFile() {
+        const fileInput = document.getElementById('fileInput');
+        const apiKeyInput = document.getElementById('apiKeyInput');
+        const runButton = document.getElementById('runButton');
+        const errorDiv = document.getElementById('errorDiv');
+        const statusDiv = document.getElementById('statusDiv');
+
+        if (fileInput.files.length > 0 && apiKeyInput.value.trim() !== '') {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const csv = event.target.result;
+                const lines = csv.split('\n');
+                const count = lines.length; // Subtract 1 to exclude the header row
+                runButton.disabled = false;
+                errorDiv.innerText = '';
+                statusDiv.innerText = `${count} vehicleIds found`;
+            };
+            reader.readAsText(fileInput.files[0]);
+        } else {
+            runButton.disabled = true;
+            errorDiv.innerText = 'Please select a CSV file and enter an API key.';
+            statusDiv.innerText = '';
+        }
+    }
+
+
+
+
+    function runBatchOperation() {
+    const apiKeyInput = document.getElementById('apiKeyInput');
+    const customerAliasInput = document.getElementById('customerAliasInput');
+    const resultsTable = $('#resultsTable').DataTable({ "paging": false });
+
+    if (confirm('!!! CAUTION !!!\nARE YOU SURE YOU WANT TO DELETE THESE DEVICES?')) {
+        fetchAuthorization(apiKeyInput.value, customerAliasInput.value)
+            .then(response => {
+                if (response.status === 200) {
+                    return response.json();
+                } else {
+                    throw new Error(`Authorization failed with status ${response.status}`);
+                }
+            })
+            .then(data => {
+                bearerToken = data.token;
+                const fileInput = document.getElementById('fileInput');
+                const reader = new FileReader();
+                reader.onload = async function(event) {
+                    const csv = event.target.result;
+                    const lines = csv.split('\n');
+                    const vehicleIds = lines.map(line => line.split(',')[0]); // Assuming the first column is vehicleId
+                    $('#progressBar').show();
+                    const progressBar = document.getElementById('progressBar');
+                    progressBar.max = vehicleIds.length;
+                    let count = 0;
+                    let statusCounts = {};
+                    const deletePromises = vehicleIds.map(async vehicleId => {
+                        try {
+                            const response = await fetchDeleteVehicle(vehicleId);
+                            progressBar.value = ++count;
+                            if (statusCounts[response.status]) {
+                                statusCounts[response.status]++;
+                            } else {
+                                statusCounts[response.status] = 1;
+                            }
+                            let responseBody = await response.text();
+                            if (response.status === 200) {
+                                responseBody = JSON.parse(responseBody).message;
+                            } else if (response.status != 200) {
+                                responseBody = JSON.parse(responseBody).errors[0].message;
+                            }
+                            resultsTable.row.add([vehicleId, response.status, responseBody]).draw(); // Use DataTables API to add rows
+                        } catch (error) {
+                            console.error(error);
+                        }
+                    });
+                    await Promise.all(deletePromises);
+                    const statusCodes = Object.keys(statusCounts).filter(code => statusCounts[code] > 0);
+                    document.getElementById('completionMessage').innerText = `Batch Delete Complete!\n\nResponse Count:\n${statusCodes.map(code => `Status ${code}: (${statusCounts[code]})`).join('\n')}`; // Set the completion message
+                    // alert(`Batch Delete Complete!\nResponse Count:\n${statusCodes.map(code => `Status ${code}: (${statusCounts[code]})`).join('\n')}`);
+                    $('#exportButton, #resultsTable, #completionMessage').show(); // Show the exportButton, resultsTable, responseCount and progressBar
+                    resultsTable.columns.adjust().draw(); // Adjust column widths dynamically
+                };
+                reader.readAsText(fileInput.files[0]);
+            })
+            .catch(error => {
+                alert(`Authorization failed: ${error.message}`);
+            });
+    }
+}
+
+document.getElementById('exportButton').addEventListener('click', function() {
+    const resultsTable = $('#resultsTable').DataTable();
+    const data = resultsTable.rows().data().toArray();
+    const csvContent = 'data:text/csv;charset=utf-8,' + data.map(row => row.join(',')).join('\n');
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', 'results.csv');
+    document.body.appendChild(link);
+    link.click();
+});
+
+
+
+
+
+
+
+
+
+
+
+    function fetchAuthorization(apiKey, accountId) {
+        const requestOptions = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                apiKey: apiKey,
+                accountId: accountId
+            })
+        };
+        return fetch('https://fleets.trimblemaps.com/api/assets/v1/accounts/authenticate', requestOptions);
+    }
+
+    function fetchDeleteVehicle(vehicleId) {
+        const myHeaders = new Headers();
+        myHeaders.append('Authorization', `Bearer ${bearerToken}`);
+        const requestOptions = {
+            method: 'DELETE',
+            headers: myHeaders,
+            redirect: 'follow'
+        };
+        return fetch(`https://fleets.trimblemaps.com/api/assets/v1/vehicles?vehicleId=${vehicleId}`, requestOptions);
+    }
+</script>
+
+</body>
+</html>
